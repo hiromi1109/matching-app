@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>相思相愛マッチング</title>
+    <style>
+        body {{ font-family: sans-serif; background-color: #fdf6f0; padding: 20px; }}
+        h1 {{ color: #d17f7f; }}
+        .section {{ margin-bottom: 20px; }}
+        label {{ display: block; margin: 5px 0; }}
+        .result {{ margin-top: 20px; padding: 10px; background-color: #fff0f0; border-radius: 10px; }}
+        button {{ padding: 10px 20px; font-size: 1rem; }}
+    </style>
+</head>
+<body>
+    <h1>相思相愛マッチング占い</h1>
+    <div class="section">
+        <label for="yourName">あなたの名前：</label>
+        <select id="yourName">
+            <option value="">選んでください</option>
+            <option value="もりみゆ">もりみゆ</option>
+            <option value="まな">まな</option>
+            <option value="ことみ">ことみ</option>
+            <option value="ひろみ">ひろみ</option>
+            <option value="ゆな">ゆな</option>
+        </select>
+    </div>
+
+    <div class="section">
+        <p>組みたい人を選んでください（複数可）:</p>
+        <label><input type="checkbox" name="target" value="もりみゆ"> もりみゆ</label>
+        <label><input type="checkbox" name="target" value="まな"> まな</label>
+        <label><input type="checkbox" name="target" value="ことみ"> ことみ</label>
+        <label><input type="checkbox" name="target" value="ひろみ"> ひろみ</label>
+        <label><input type="checkbox" name="target" value="ゆな"> ゆな</label>
+    </div>
+
+    <button onclick="submitMatch()">送信してマッチング！</button>
+
+    <div id="result" class="result"></div>
+
+    <script>
+        const matchData = {{}};
+
+        function submitMatch() {{
+            const yourName = document.getElementById("yourName").value;
+            const checkboxes = document.querySelectorAll('input[name="target"]:checked');
+            const selected = Array.from(checkboxes).map(cb => cb.value);
+
+            if (!yourName || selected.length === 0) {{
+                alert("名前と組みたい人を選んでください！");
+                return;
+            }}
+
+            matchData[yourName] = selected;
+
+            // 両想いチェック
+            let matches = [];
+            for (let a in matchData) {{
+                for (let b of matchData[a]) {{
+                    if (matchData[b] && matchData[b].includes(a)) {{
+                        let pair = [a, b].sort().join(" 💖 ");
+                        if (!matches.includes(pair)) {{
+                            matches.push(pair);
+                        }}
+                    }}
+                }}
+            }}
+
+            const resultBox = document.getElementById("result");
+            if (matches.length > 0) {{
+                resultBox.innerHTML = "<h3>✨マッチング成立✨</h3><ul>" + matches.map(p => "<li>" + p + "</li>").join("") + "</ul>";
+            }} else {{
+                resultBox.innerHTML = "まだマッチングは成立していません…";
+            }}
+        }}
+    </script>
+</body>
+</html>
